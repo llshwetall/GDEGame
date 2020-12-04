@@ -68,6 +68,7 @@ class GameSpace extends Component {
     showModal: false,
     ModalMessage: "",
     ModalTitle: "",
+    modalBackdrop: "static",
     depts: [
         { id: glob.healthId, label: "Health Policies", info: glob.healthInfo,invst: glob.healthInvst},
         { id: glob.defenceId, label: "Defence Policies" ,info: glob.defenceInfo,invst: glob.defenceInvst },
@@ -142,15 +143,15 @@ class GameSpace extends Component {
       this.setState({ showModal: false });
     }
 
-    setModalValues = (title, message) => {
-      this.setState({ showModal: true, ModalMessage: message, ModalTitle:title })
+    setModalValues = (title, message, b) => {
+      this.setState({ showModal: true, ModalMessage: message, ModalTitle:title, modalBackdrop: b })
     }
 
   increaseHealth = (x) => {
     let y = x
     if (y < 0)
     {
-      y = 0.9*x
+      y = 0.6*x
     }
     y = this.state.health_perc + y*0.9
     if (y > 100)
@@ -167,7 +168,7 @@ class GameSpace extends Component {
     let y = x
     if (y < 0)
     {
-      y = 0.9*x
+      y = 0.6*x
     }
     y = this.state.defence_perc + y*1.1
     if (y > 100)
@@ -183,7 +184,7 @@ class GameSpace extends Component {
     let y = x
     if (y < 0)
     {
-      y = 0.9*x
+      y = 0.6*x
     }
     if (y > 100)
     {
@@ -199,7 +200,7 @@ class GameSpace extends Component {
     let y = x
     if (y < 0)
     {
-      y = 0.9*x
+      y = 0.6*x
     }
     if (y > 100)
     {
@@ -228,7 +229,7 @@ class GameSpace extends Component {
         {
           if (this.state.curFunds < c.cost)
           {
-            this.setModalValues("Insufficient Funds", "You don't have enough funds right now to implement this policy")
+            this.setModalValues("Insufficient Funds", "You don't have enough funds right now to implement this policy","dynamic")
             c.status = !c.status
           }
           else
@@ -258,7 +259,7 @@ class GameSpace extends Component {
         {
           if (this.state.curFunds < c.cost)
           {
-            this.setModalValues("Insufficient Funds", "You don't have enough funds right now to implement this policy")
+            this.setModalValues("Insufficient Funds", "You don't have enough funds right now to implement this policy","dynamic")
             c.status = !c.status
           }
           else{
@@ -288,7 +289,7 @@ class GameSpace extends Component {
         {
           if (this.state.curFunds < c.cost)
           {
-            this.setModalValues("Insufficient Funds", "You don't have enough funds right now to implement this policy")
+            this.setModalValues("Insufficient Funds", "You don't have enough funds right now to implement this policy","dynamic")
             c.status = !c.status
           }
           else{
@@ -318,7 +319,7 @@ class GameSpace extends Component {
         {
           if (this.state.curFunds < c.cost)
           {
-            this.setModalValues("Insufficient Funds", "You don't have enough funds right now to implement this policy")
+            this.setModalValues("Insufficient Funds", "You don't have enough funds right now to implement this policy","dynamic")
             c.status = !c.status
           }
           else
@@ -355,32 +356,44 @@ class GameSpace extends Component {
 
   updatePerc = () => {
 
-    let health_rate = 4*(100 - this.state.health_perc)*0.65/100 + 0.1
-    let defence_rate = 2*(100 - this.state.defence_perc)*0.5/100 + 0.1
-    let education_rate = 2*(100 - this.state.education_perc)*0.25/100 + 0.1
-    let agriculture_rate = 2*(100 - this.state.agriculture_perc)*0.45/100 + 0.1
+    let health_rate = 2.4*(100 - this.state.health_perc)*0.65/100 + 0.1
+    let defence_rate = 2.2*(100 - this.state.defence_perc)*0.5/100 + 0.1
+    let education_rate = 2.1*(100 - this.state.education_perc)*0.25/100 + 0.1
+    let agriculture_rate = 2.2*(100 - this.state.agriculture_perc)*0.45/100 + 0.1
 
-    if (this.state.health_perc > 73 && this.state.time > 30)
+    if (this.state.health_perc > 65 && this.state.time > 30)
     {
-      health_rate = health_rate / 6
+      health_rate = health_rate / 5
+    }
+    else if (this.state.health_perc > 45 && this.state.time > 30)
+    {
+      health_rate = health_rate / 4
     }
 
-    if (this.state.defence_perc > 69 && this.state.time > 50)
+    if (this.state.defence_perc > 72 && this.state.time > 50)
     {
-      defence_rate = defence_rate / 2.5
+      defence_rate = defence_rate / 2.7
+    }
+    else if (this.state.defence_perc > 30 && this.state.time > 50)
+    {
+      defence_rate = defence_rate / 2.3
     }
 
-    if (this.state.agriculture_perc > 67 && this.state.time > 50)
+    if (this.state.agriculture_perc > 75 && this.state.time > 50)
     {
-      agriculture_rate = agriculture_rate / 1.5
+      agriculture_rate = agriculture_rate / 2.1
     }
 
-    if (this.state.agriculture_perc > 50 && this.state.time > 100)
+    if (this.state.agriculture_perc > 46 && this.state.time > 100)
     {
-      agriculture_rate = agriculture_rate / 1.5
+      agriculture_rate = agriculture_rate / 1.7
     }
 
     if (this.state.education_perc > 60)
+    {
+      education_rate = education_rate / 1.45
+    }
+    else if (this.state.education_perc > 45)
     {
       education_rate = education_rate / 1.3
     }
@@ -402,7 +415,8 @@ class GameSpace extends Component {
 
   updateFund = () => {
 
-    let added_fund = 0.08 * this.state.approval + 5
+    let added_fund = 0.08 * this.state.approval + 4
+    added_fund = added_fund > 10 ? 10 : added_fund
     added_fund = Number(added_fund.toFixed(1))
     this.setState({
       last_fund: this.state.total - this.state.time,
@@ -542,7 +556,7 @@ class GameSpace extends Component {
   }
 
   scene1 = () => {
-    this.setModalValues("BAD NEWS!", "The implementation of health policies has been riddled with corruption and has reduced the performance of the health department by 5%")
+    this.setModalValues("BAD NEWS!", "The implementation of health policies has been riddled with corruption and has reduced the performance of the health department by 5%", "static")
     this.setState({
       sc1_flag: true,
       health_perc: this.state.health_perc - 5,
@@ -550,7 +564,7 @@ class GameSpace extends Component {
   }
 
   scene2 = () => {
-    this.setModalValues("GOOD NEWS!", "UN has declared you the best prime minister in the world and hence has awarded monetary funds worth 9 trillion rupees")
+    this.setModalValues("GOOD NEWS!", "UN has declared you the best prime minister in the world and hence has awarded monetary funds worth 9 trillion rupees","static")
     this.setState({
       sc2_flag: true,
       curFunds: this.state.curFunds + 9
@@ -558,7 +572,7 @@ class GameSpace extends Component {
   }
 
   scene3 = () => {
-    this.setModalValues("BAD NEWS!", "Locusts have destroyed many crops in the northern states. This has negatively affected the functioning of the agriculture department by 3%")
+    this.setModalValues("BAD NEWS!", "Locusts have destroyed many crops in the northern states. This has negatively affected the functioning of the agriculture department by 3%","static")
     this.setState({
       sc3_flag: true,
       agriculture_perc: this.state.agriculture_perc - 3
@@ -566,7 +580,7 @@ class GameSpace extends Component {
   }
 
   scene4 = () => {
-    this.setModalValues("GOOD NEWS!", "Better equipment and storage facilities have been built. This has boosted agriculture department performance by 4%")
+    this.setModalValues("GOOD NEWS!", "Better equipment and storage facilities have been built. This has boosted agriculture department performance by 4%","static")
     this.setState({
       sc4_flag: true,
       agriculture_perc: this.state.agriculture_perc + 4
@@ -574,7 +588,7 @@ class GameSpace extends Component {
   }
 
   scene5 = () => {
-    this.setModalValues("BAD NEWS!", "A top politician was caught embezzeling funds for the department. This has reduced the performance of the defence department by 4%")
+    this.setModalValues("BAD NEWS!", "A top politician was caught embezzeling funds from the defence department. This has reduced the performance of the defence department by 4%","static")
     this.setState({
       sc5_flag: true,
       defence_perc: this.state.defence_perc - 4
@@ -582,7 +596,7 @@ class GameSpace extends Component {
   }
 
   scene6 = () => {
-    this.setModalValues("GOOD NEWS!", "The committee overseeing implementation of the policies has adopted new lean and streamlined methodologies. This has boosted the performance of the defence department by 3%")
+    this.setModalValues("GOOD NEWS!", "The committee overseeing implementation of the policies of the defence department has adopted new lean and streamlined methodologies. This has boosted the performance of the defence department by 3%","static")
     this.setState({
       sc6_flag: true,
       defence_perc: this.state.defence_perc + 3
@@ -590,7 +604,7 @@ class GameSpace extends Component {
   }
 
   scene7 = () => {
-    this.setModalValues("GOOD NEWS!", "Agriculture exports have been very profitable this year. You get 6 trillion rupees as extra funds")
+    this.setModalValues("GOOD NEWS!", "Agriculture exports have been very profitable this year. You get 6 trillion rupees as extra funds","static")
     this.setState({
       sc7_flag: true,
       curFunds: this.state.curFunds + 6
@@ -598,7 +612,7 @@ class GameSpace extends Component {
   }
 
   scene8 = () => {
-    this.setModalValues("BAD NEWS!", "A wave of flat earthers and anti-vaccinists have taken over the running of the department, imapcting it's functioning negatively by 6%")
+    this.setModalValues("BAD NEWS!", "A wave of flat earthers and anti-vaccinists have taken over the running of the education department, impacting it's functioning negatively by 6%","static")
     this.setState({
       sc8_flag: true,
       education_perc: this.state.education_perc - 6
@@ -686,16 +700,16 @@ class GameSpace extends Component {
         }
 
         skills_health = [
-          {type: "Health", level: this.state.health_perc, color: {bar: this.state.health_perc > 30 ? "#3498db" : "#ff1a1a", title: { background: 'grey', text: 'white' } }},
+          {type: "Health", level: this.state.health_perc.toFixed(2), color: {bar: this.state.health_perc > 30 ? "#3498db" : "#ff1a1a", title: { background: 'grey', text: 'white' } }},
         ];
         skills_defense = [
-          {type: "Defense", level: this.state.defence_perc, color: {bar: this.state.defence_perc > 30 ? "#3498db" : "#ff1a1a", title: { background: 'grey', text: 'white' } }},
+          {type: "Defense", level: this.state.defence_perc.toFixed(2), color: {bar: this.state.defence_perc > 30 ? "#3498db" : "#ff1a1a", title: { background: 'grey', text: 'white' } }},
         ];
         skills_agr = [
-          {type: "Agriculture", level: this.state.agriculture_perc, color: {bar: this.state.agriculture_perc > 30 ? "#3498db" : "#ff1a1a", title: { background: 'grey', text: 'white' } }},
+          {type: "Agriculture", level: this.state.agriculture_perc.toFixed(2), color: {bar: this.state.agriculture_perc > 30 ? "#3498db" : "#ff1a1a", title: { background: 'grey', text: 'white' } }},
         ];
         skills_edu = [
-          {type: "Education", level: this.state.education_perc, color: {bar: this.state.education_perc > 30 ? "#3498db" : "#ff1a1a", title: { background: 'grey', text: 'white' } }},
+          {type: "Education", level: this.state.education_perc.toFixed(2), color: {bar: this.state.education_perc > 30 ? "#3498db" : "#ff1a1a", title: { background: 'grey', text: 'white' } }},
         ];
 
         if (this.state.time < 0 )
@@ -779,7 +793,7 @@ class GameSpace extends Component {
         text= 'white'
         style={{ width: '30rem' }}
         className="mb-2">
-        <Card.Header>Voter Approval: {this.state.approval} % </Card.Header>
+        <Card.Header>Voter Approval: {this.state.approval.toFixed(2)} % </Card.Header>
         <Card.Body>
         <Card.Text>
         <div >
@@ -818,7 +832,7 @@ class GameSpace extends Component {
         </Row>
         </Container>
 
-        <Modal show={this.state.showModal} onHide={this.handleCloseModal}>
+        <Modal show={this.state.showModal} onHide={this.handleCloseModal} backdrop= {this.state.modalBackdrop}>
           <Modal.Header closeButton>
             <Modal.Title>{this.state.ModalTitle}</Modal.Title>
           </Modal.Header>
@@ -853,15 +867,15 @@ class GameSpace extends Component {
           <Card.Title>End of Term Report</Card.Title>
           <Card.Text>
           <div >
-          <div> Score : {2000 + 2*this.state.approval + 3*this.state.curFunds.toFixed(2)+ 1.5*(this.state.health_perc + this.state.defence_perc + this.state.agriculture_perc + this.state.education_perc)}  </div>
+          <div> Score : {2000 + 2*this.state.approval.toFixed(2) + 3*this.state.curFunds.toFixed(2)+ 1.5*(this.state.health_perc + this.state.defence_perc + this.state.agriculture_perc + this.state.education_perc).toFixed(2)}  </div>
           <div> Voter Approval : {this.state.approval.toFixed(2)} % </div>
           <div> Funds Left : {this.state.curFunds.toFixed(2)} trillion rupees  </div>
           <div> State of each department (performance): </div>
           <ul>
-            <li> Health Department : {this.state.health_perc} </li>
-            <li> Defence Department : {this.state.defence_perc} </li>
-            <li> Agriculture Department : {this.state.agriculture_perc} </li>
-            <li> Education Department : {this.state.education_perc} </li>
+            <li> Health Department : {this.state.health_perc.toFixed(2)} </li>
+            <li> Defence Department : {this.state.defence_perc.toFixed(2)} </li>
+            <li> Agriculture Department : {this.state.agriculture_perc.toFixed(2)} </li>
+            <li> Education Department : {this.state.education_perc.toFixed(2)} </li>
           </ul>
           </div>
           </Card.Text>
@@ -924,15 +938,15 @@ class GameSpace extends Component {
           <Card.Title>End of Term Report</Card.Title>
           <Card.Text>
           <div >
-          <div> Score : {this.state.term - this.state.timeLeft + 2*this.state.approval + 3*this.state.curFunds.toFixed(2)+ 1.5*(this.state.health_perc + this.state.defence_perc + this.state.agriculture_perc + this.state.education_perc)}  </div>
-          <div> Voter Approval : {this.state.approval} % </div>
-          <div> Funds Left : {this.state.curFunds} trillion rupees  </div>
+          <div> Score : {(this.state.term - this.state.timeLeft + 2*this.state.approval + 3*this.state.curFunds.toFixed(2)+ 1.5*(this.state.health_perc + this.state.defence_perc + this.state.agriculture_perc + this.state.education_perc)).toFixed(2)}  </div>
+          <div> Voter Approval : {this.state.approval.toFixed(2)} % </div>
+          <div> Funds Left : {this.state.curFunds.toFixed(2)} trillion rupees  </div>
           <div> State of each department (performance): </div>
           <ul>
-            <li> Health Department : {this.state.health_perc} </li>
-            <li> Defence Department : {this.state.defence_perc} </li>
-            <li> Agriculture Department : {this.state.agriculture_perc} </li>
-            <li> Education Department : {this.state.education_perc} </li>
+            <li> Health Department : {this.state.health_perc.toFixed(2)} </li>
+            <li> Defence Department : {this.state.defence_perc.toFixed(2)} </li>
+            <li> Agriculture Department : {this.state.agriculture_perc.toFixed(2)} </li>
+            <li> Education Department : {this.state.education_perc.toFixed(2)} </li>
             {DaysLeft}
           </ul>
           </div>
