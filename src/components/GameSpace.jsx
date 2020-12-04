@@ -45,9 +45,9 @@ class GameSpace extends Component {
     last_defence_perc: 77,
     last_agriculture_perc: 80,
     last_education_perc: 71,
-    sc1_time: 350,
+    sc1_time: 50,
     sc2_time: 125,
-    sc3_time: 310,
+    sc3_time: 110,
     sc4_time: 280,
     sc5_time: 250,
     sc6_time: 210,
@@ -153,6 +153,10 @@ class GameSpace extends Component {
       y = 0.9*x
     }
     y = this.state.health_perc + y*0.9
+    if (y > 100)
+    {
+      y = 100
+    }
     this.setState({
       time: this.state.time,
       health_perc: Number(y),
@@ -166,6 +170,10 @@ class GameSpace extends Component {
       y = 0.9*x
     }
     y = this.state.defence_perc + y*1.1
+    if (y > 100)
+    {
+      y = 100
+    }
     this.setState({
       defence_perc: Number(y),
     })
@@ -177,7 +185,10 @@ class GameSpace extends Component {
     {
       y = 0.9*x
     }
-
+    if (y > 100)
+    {
+      y = 100
+    }
     y = this.state.agriculture_perc + y*1.1
     this.setState({
       agriculture_perc: Number(y),
@@ -189,6 +200,10 @@ class GameSpace extends Component {
     if (y < 0)
     {
       y = 0.9*x
+    }
+    if (y > 100)
+    {
+      y = 100
     }
     y = this.state.education_perc + y*1.2
     this.setState({
@@ -367,7 +382,7 @@ class GameSpace extends Component {
 
     if (this.state.education_perc > 60)
     {
-      education_rate = education_rate / 1.2
+      education_rate = education_rate / 1.3
     }
 
     if (isNaN(health_rate))
@@ -401,7 +416,7 @@ class GameSpace extends Component {
     let def_change = this.state.defence_perc - this.state.last_defence_perc
     let agri_change = this.state.agriculture_perc - this.state.last_agriculture_perc
     let edu_change = this.state.education_perc - this.state.last_education_perc
-    let app_change = (0.6*health_change + 0.4*def_change + 0.2*agri_change + 0.1*edu_change)
+    let app_change = (0.6*health_change + 0.4*def_change + 0.2*agri_change + 0.1*edu_change)/1.4
 
 
     // alert(edu_change)
