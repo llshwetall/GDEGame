@@ -853,8 +853,9 @@ class GameSpace extends Component {
           <Card.Title>End of Term Report</Card.Title>
           <Card.Text>
           <div >
-          <div> Voter Approval : {this.state.approval} % </div>
-          <div> Funds Left : {this.state.curFunds} trillion rupees  </div>
+          <div> Score : {2000 + 2*this.state.approval + 3*this.state.curFunds.toFixed(2)+ 1.5*(this.state.health_perc + this.state.defence_perc + this.state.agriculture_perc + this.state.education_perc)}  </div>
+          <div> Voter Approval : {this.state.approval.toFixed(2)} % </div>
+          <div> Funds Left : {this.state.curFunds.toFixed(2)} trillion rupees  </div>
           <div> State of each department (performance): </div>
           <ul>
             <li> Health Department : {this.state.health_perc} </li>
@@ -923,6 +924,7 @@ class GameSpace extends Component {
           <Card.Title>End of Term Report</Card.Title>
           <Card.Text>
           <div >
+          <div> Score : {this.state.term - this.state.timeLeft + 2*this.state.approval + 3*this.state.curFunds.toFixed(2)+ 1.5*(this.state.health_perc + this.state.defence_perc + this.state.agriculture_perc + this.state.education_perc)}  </div>
           <div> Voter Approval : {this.state.approval} % </div>
           <div> Funds Left : {this.state.curFunds} trillion rupees  </div>
           <div> State of each department (performance): </div>
