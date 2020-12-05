@@ -171,7 +171,7 @@ class GameSpace extends Component {
       y = 0.6*x
     }
     y = this.state.defence_perc + y*1.1
-    if (y > 100)
+    if (y >= 100)
     {
       y = 100
     }
@@ -186,11 +186,12 @@ class GameSpace extends Component {
     {
       y = 0.6*x
     }
-    if (y > 100)
+    y = this.state.agriculture_perc + y*1.1
+
+    if (y >= 100)
     {
       y = 100
     }
-    y = this.state.agriculture_perc + y*1.1
     this.setState({
       agriculture_perc: Number(y),
     })
@@ -202,11 +203,11 @@ class GameSpace extends Component {
     {
       y = 0.6*x
     }
-    if (y > 100)
+    y = this.state.education_perc + y*1.2
+    if (y >= 100)
     {
       y = 100
     }
-    y = this.state.education_perc + y*1.2
     this.setState({
       education_perc: Number(y),
     })
@@ -581,9 +582,14 @@ class GameSpace extends Component {
 
   scene4 = () => {
     this.setModalValues("GOOD NEWS!", "Better equipment and storage facilities have been built. This has boosted agriculture department performance by 4%","static")
+    let y = Number(this.state.agriculture_perc + 4)
+    if (y > 100)
+    {
+      y = 100
+    }
     this.setState({
       sc4_flag: true,
-      agriculture_perc: this.state.agriculture_perc + 4
+      agriculture_perc: Number(y)
     })
   }
 
@@ -597,9 +603,14 @@ class GameSpace extends Component {
 
   scene6 = () => {
     this.setModalValues("GOOD NEWS!", "The committee overseeing implementation of the policies of the defence department has adopted new lean and streamlined methodologies. This has boosted the performance of the defence department by 3%","static")
+    let y = Number(this.state.defence_perc + 3)
+    if (y> 100)
+    {
+      y = 100
+    }
     this.setState({
       sc6_flag: true,
-      defence_perc: this.state.defence_perc + 3
+      defence_perc: Number(y)
     })
   }
 
